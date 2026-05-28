@@ -1,0 +1,17 @@
+/* [ZypherMC] Servers dashboard */
+.server-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.25rem}
+.server-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;transition:all .3s}
+.server-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient-accent)}
+.server-card.offline::before{background:#444}
+.server-card .sc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.server-card .sc-name{font-size:1.25rem;font-weight:700;display:flex;align-items:center}
+.server-card .sc-row{display:flex;justify-content:space-between;padding:.4rem 0;font-size:.9rem;border-top:1px solid rgba(255,255,255,.04)}
+.server-card .sc-row .l{color:var(--text-secondary)}
+.server-card .sc-row .v{font-weight:600;font-family:'Space Grotesk',sans-serif}
+.tps-good{color:var(--accent-green)}
+.tps-mid{color:var(--accent-gold)}
+.tps-bad{color:var(--accent-red)}
+.players-list{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.75rem;max-height:120px;overflow-y:auto}
+.players-list a{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .5rem;background:rgba(155,53,232,.1);border-radius:6px;font-size:.78rem;color:#fff}
+.players-list img{width:18px;height:18px;border-radius:3px;image-rendering:pixelated}
+.sc-updated{font-size:.72rem;color:var(--text-secondary);margin-top:.75rem;text-align:right}

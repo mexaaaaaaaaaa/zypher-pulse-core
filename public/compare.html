@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="icon" href="/assets/favicon.png"/><link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#9b35e8"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css"/><link rel="stylesheet" href="/css/animations.css"/>
+<link rel="stylesheet" href="/css/navbar.css"/><link rel="stylesheet" href="/css/responsive.css"/>
+<title>Compare Players — ZypherMC</title>
+<meta name="description" content="Compare two PvP players side by side — ELO, tier, KDR, win rate, head-to-head."/>
+<meta property="og:title" content="Compare Players — ZypherMC"/>
+<meta property="og:description" content="Compare two PvP players side by side — ELO, tier, KDR, win rate, head-to-head."/>
+<meta property="og:image" content="/assets/logo-mountain.png"/>
+</head><body><main><section class="container"><h1>Compare PvP Players</h1>
+<div class="flex" style="margin-top:1rem;max-width:700px"><input id="cmp-p1" placeholder="Player 1"/><input id="cmp-p2" placeholder="Player 2"/><button class="btn btn-primary" onclick="runCompare()">Compare</button></div>
+<div id="cmp-root" style="margin-top:2rem"></div></section></main><footer><div class="container"><strong>ZypherMC</strong> · play.zypermc.fun · <a href="https://discord.gg/zypertiers" target="_blank" rel="noopener">Discord</a> · <a href="/about.html">About</a><div style="margin-top:.5rem;font-size:.8rem">Java + Bedrock 1.20.x · © ZypherMC Network</div></div></footer><script src="/js/firebase.js"></script><script src="/js/utils.js"></script>
+<script src="/js/particles.js"></script><script src="/js/three-bg.js"></script>
+<script src="/js/navbar.js"></script><script src="/js/animations.js"></script><script>
+async function runCompare(p1,p2){
+  p1 = p1 || document.getElementById('cmp-p1').value.trim();
+  p2 = p2 || document.getElementById('cmp-p2').value.trim();
+  if (!p1 || !p2) { showToast('Enter both names','error'); return; }
+  history.replaceState(null,'',`/compare.html?p1=${encodeURIComponent(p1)}&p2=${encodeURIComponent(p2)}`);
+  const root = document.getElementById('cmp-root');
+  root.innerHTML = '<div class="skeleton" style="height:300px"></div>';
+  const [s1,e1,s2,e2] = await Promise.all([db(`/pvp/players/${p1}/stats`),db(`/pvp/players/${p1}/elo/overall`),db(`/pvp/players/${p2}/stats`),db(`/pvp/players/${p2}/elo/overall`)]);
+  if (!s1 && !s2) { root.innerHTML='<div class="empty">No PvP data for either player</div>'; return; }
+  const fields = [['ELO',e1?.currentElo,e2?.currentElo],['Peak ELO',e1?.peakElo,e2?.peakElo],['Wins',s1?.wins,s2?.wins],['Losses',s1?.losses,s2?.losses],['Total Kills',s1?.totalKills,s2?.totalKills],['Total Deaths',s1?.totalDeaths,s2?.totalDeaths],['Best Streak',s1?.highestKillStreak,s2?.highestKillStreak],['Arrow Acc',s1?.arrowAccuracyPercent,s2?.arrowAccuracyPercent],['Headshot %',s1?.headshotPercent,s2?.headshotPercent],['Clutch Wins',s1?.clutchWins,s2?.clutchWins]];
+  root.innerHTML = `<div class="grid grid-2">
+    <div class="card" style="text-align:center"><img src="${headUrl(p1)}" style="width:96px;height:96px;border-radius:10px;image-rendering:pixelated"/><h2>${p1}</h2>${tierBadge(e1?.currentElo)}</div>
+    <div class="card" style="text-align:center"><img src="${headUrl(p2)}" style="width:96px;height:96px;border-radius:10px;image-rendering:pixelated"/><h2>${p2}</h2>${tierBadge(e2?.currentElo)}</div>
+  </div>
+  <table style="margin-top:1.5rem"><thead><tr><th>${p1}</th><th>Stat</th><th>${p2}</th></tr></thead><tbody>
+  ${fields.map(([l,a,b])=>{const aw=(a||0)>(b||0),bw=(b||0)>(a||0);return `<tr><td style="text-align:right;${aw?'color:var(--accent-secondary);font-weight:700':''}">${fmtNum(a)}</td><td style="text-align:center;color:var(--text-secondary);font-size:.85rem">${l}</td><td style="${bw?'color:var(--accent-secondary);font-weight:700':''}">${fmtNum(b)}</td></tr>`;}).join('')}
+  </tbody></table>`;
+}
+const u1 = qs('p1'), u2 = qs('p2');
+if (u1) document.getElementById('cmp-p1').value = u1;
+if (u2) document.getElementById('cmp-p2').value = u2;
+if (u1 && u2) runCompare(u1,u2);
+</script></body></html>

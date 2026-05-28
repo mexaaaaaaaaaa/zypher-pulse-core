@@ -1,0 +1,9 @@
+/* [ZypherMC] Auth pages */
+.auth-wrap{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding:2rem 1rem}
+.auth-card{width:100%;max-width:420px;background:rgba(20,13,30,.7);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5),var(--glow-purple)}
+.auth-card h1{text-align:center;margin-bottom:.25rem;background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+.auth-card p.sub{text-align:center;color:var(--text-secondary);margin-bottom:2rem}
+.auth-card label{display:block;font-size:.85rem;font-weight:600;margin-bottom:.4rem;color:var(--text-secondary)}
+.auth-card .field{margin-bottom:1rem}
+.auth-card button{width:100%;margin-top:.5rem;padding:.85rem}
+.auth-card .alt{text-align:center;margin-top:1.25rem;color:var(--text-secondary);font-size:.9rem}

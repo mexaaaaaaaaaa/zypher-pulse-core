@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {"source":"/player/:name","destination":"/player.html?name=:name"},
+    {"source":"/compare/:p1/:p2","destination":"/compare.html?p1=:p1&p2=:p2"},
+    {"source":"/servers","destination":"/servers.html"},
+    {"source":"/tiers","destination":"/tiers.html"},
+    {"source":"/spectate","destination":"/spectate.html"},
+    {"source":"/leaderboard","destination":"/leaderboard.html"},
+    {"source":"/matches","destination":"/matches.html"},
+    {"source":"/stats","destination":"/stats.html"},
+    {"source":"/about","destination":"/about.html"},
+    {"source":"/login","destination":"/login.html"},
+    {"source":"/register","destination":"/register.html"}
+  ],
+  "headers":[{"source":"/(.*)","headers":[
+    {"key":"X-Frame-Options","value":"DENY"},
+    {"key":"X-Content-Type-Options","value":"nosniff"}
+  ]}]
+}

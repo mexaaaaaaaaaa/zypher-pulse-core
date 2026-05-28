@@ -1,0 +1,14 @@
+/* [ZypherMC] Responsive */
+@media(max-width:768px){
+.container{padding:0 1rem}
+main{padding-top:70px}
+.player-hero{padding:1.25rem;gap:1rem}
+.player-hero img.head{width:88px;height:88px}
+table{font-size:.82rem}
+th,td{padding:.6rem .5rem}
+.hide-mobile{display:none!important}
+}
+@media(max-width:480px){
+h1{font-size:1.75rem}
+.stat-card .num{font-size:1.75rem}
+}

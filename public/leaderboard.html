@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="icon" href="/assets/favicon.png"/><link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#9b35e8"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css"/><link rel="stylesheet" href="/css/animations.css"/>
+<link rel="stylesheet" href="/css/navbar.css"/><link rel="stylesheet" href="/css/responsive.css"/><link rel="stylesheet" href="/css/leaderboard.css"/>
+<title>PvP Tiers Leaderboard — ZypherMC</title>
+<meta name="description" content="Live PvP tiers and ELO leaderboards for ZypherMC duels — Classic, SkyWars, Bridge, UHC and more."/>
+<meta property="og:title" content="PvP Tiers Leaderboard — ZypherMC"/>
+<meta property="og:description" content="Live PvP tiers and ELO leaderboards for ZypherMC duels — Classic, SkyWars, Bridge, UHC and more."/>
+<meta property="og:image" content="/assets/logo-mountain.png"/>
+</head><body><main><section class="container"><h1>PvP Tiers Leaderboard</h1>
+<p style="color:var(--text-secondary)">Showing rankings for <strong>ZypherMC PvP Duels</strong> — only the PvP server tracks tiers and ELO.</p>
+<div class="lb-controls" style="margin-top:1.5rem">
+  <input id="lb-search" placeholder="🔍 Search player..."/>
+  <select id="lb-tier"><option value="">All Tiers</option><option>Bronze</option><option>Silver</option><option>Gold</option><option>Diamond</option><option>Master</option><option>Legend</option></select>
+</div>
+<div id="lb-tabs" class="lb-tabs"></div>
+<div class="podium" id="lb-podium"></div>
+<div id="lb-table"></div>
+<div class="lb-pagination" id="lb-pagination"></div>
+</section></main><footer><div class="container"><strong>ZypherMC</strong> · play.zypermc.fun · <a href="https://discord.gg/zypertiers" target="_blank" rel="noopener">Discord</a> · <a href="/about.html">About</a><div style="margin-top:.5rem;font-size:.8rem">Java + Bedrock 1.20.x · © ZypherMC Network</div></div></footer><script src="/js/firebase.js"></script><script src="/js/utils.js"></script>
+<script src="/js/particles.js"></script><script src="/js/three-bg.js"></script>
+<script src="/js/navbar.js"></script><script src="/js/animations.js"></script><script src="/js/leaderboard.js"></script><script>initLeaderboard();</script></body></html>
