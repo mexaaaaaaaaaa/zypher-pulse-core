@@ -1,0 +1,20 @@
+/* [ZypherMC] Leaderboard */
+.lb-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.lb-tab{padding:.55rem 1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--text-secondary);font-size:.85rem;font-weight:600;transition:all .2s}
+.lb-tab:hover{color:#fff;border-color:var(--accent-primary)}
+.lb-tab.active{background:var(--gradient-accent);color:#fff;border-color:transparent;box-shadow:var(--glow-purple)}
+.podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:1rem;margin-bottom:2rem;align-items:end}
+.podium-item{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1rem;text-align:center;position:relative;animation:fadeUp .6s backwards}
+.podium-item.rank-1{border-color:var(--accent-gold);box-shadow:var(--glow-gold);min-height:240px;animation-delay:.2s}
+.podium-item.rank-2{border-color:#c0c0c0;min-height:200px;animation-delay:0s}
+.podium-item.rank-3{border-color:#cd7f32;min-height:180px;animation-delay:.1s}
+.podium-item img{width:80px;height:80px;border-radius:10px;margin-bottom:.75rem;image-rendering:pixelated}
+.podium-item .rank-num{font-size:2.5rem;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1}
+.podium-item .player-name{font-weight:700;margin:.5rem 0}
+.podium-item .elo{font-size:1.5rem;color:var(--accent-secondary);font-weight:800}
+.lb-controls{display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}
+.lb-controls input,.lb-controls select{flex:1;min-width:160px}
+.lb-pagination{display:flex;justify-content:center;gap:.5rem;margin-top:1.5rem}
+.lb-pagination button{background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:.5rem .9rem;border-radius:6px;cursor:pointer}
+.lb-pagination button.active{background:var(--gradient-accent);border-color:transparent}
+@media(max-width:640px){.podium{grid-template-columns:1fr;gap:.75rem}.podium-item{min-height:auto!important}}

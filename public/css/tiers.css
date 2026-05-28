@@ -1,0 +1,9 @@
+/* [ZypherMC] Tiers showcase */
+.tier-showcase{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.tier-card{background:var(--bg-card);border:2px solid var(--border);border-radius:16px;padding:1.5rem 1rem;text-align:center;position:relative;transition:transform .3s}
+.tier-card:hover{transform:translateY(-6px)}
+.tier-card .tname{font-size:1.5rem;font-weight:800;margin-bottom:.5rem;font-family:'Space Grotesk',sans-serif}
+.tier-card .trange{color:var(--text-secondary);font-size:.85rem}
+.tier-card .tcount{margin-top:.75rem;font-size:1.75rem;font-weight:800}
+.tier-progress{height:24px;border-radius:12px;background:var(--bg-card);border:1px solid var(--border);overflow:hidden;position:relative;margin:1rem 0}
+.tier-progress > div{height:100%;background:linear-gradient(90deg,#cd7f32 0%,#c0c0c0 20%,#ffd700 40%,#00d4ff 60%,#9b35e8 80%,#ff0080 100%);border-radius:12px}
