@@ -1,0 +1,21 @@
+/* [ZypherMC] Navbar */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,5,8,.7);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);transition:transform .3s ease,background .3s}
+.navbar.hidden{transform:translateY(-100%)}
+.nav-inner{max-width:1400px;margin:0 auto;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.1rem;font-family:'Space Grotesk',sans-serif;color:#fff}
+.nav-logo img{height:38px;width:auto;filter:drop-shadow(0 0 10px rgba(155,53,232,.6))}
+.nav-links{display:flex;gap:.25rem;align-items:center}
+.nav-links a{color:var(--text-secondary);padding:.5rem .85rem;border-radius:8px;font-weight:500;font-size:.92rem;transition:all .2s}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(155,53,232,.12)}
+.nav-right{display:flex;align-items:center;gap:.5rem}
+.nav-players{font-size:.85rem;color:var(--accent-green);padding:.4rem .7rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);border-radius:8px;font-weight:600}
+.nav-toggle{display:none;background:transparent;border:1px solid var(--border);color:#fff;padding:.5rem;border-radius:8px;cursor:pointer}
+@media(max-width:980px){
+.nav-links,.nav-players{display:none}
+.nav-toggle{display:inline-flex}
+.nav-drawer{position:fixed;top:64px;right:0;width:280px;max-width:90vw;height:calc(100vh - 64px);background:var(--bg-secondary);border-left:1px solid var(--border);padding:1rem;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column;gap:.25rem;overflow-y:auto}
+.nav-drawer.open{transform:translateX(0)}
+.nav-drawer a{padding:.85rem 1rem;color:var(--text-primary);border-radius:8px}
+.nav-drawer a:hover{background:rgba(155,53,232,.12)}
+}
+@media(min-width:981px){.nav-drawer{display:none}}
