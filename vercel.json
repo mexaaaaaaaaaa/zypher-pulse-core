@@ -6,3 +6,14 @@
     }
   ]
 }
+{
+"buildCommand": "npm run build",
+"outputDirectory": "dist/client",
+"framework": "vite",
+"rewrites": [
+{
+"source": "/(.*)",
+"destination": "/index.html"
+}
+]
+}
