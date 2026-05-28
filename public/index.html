@@ -1,0 +1,81 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="icon" href="/assets/favicon.png"/><link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#9b35e8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css"/><link rel="stylesheet" href="/css/animations.css"/>
+<link rel="stylesheet" href="/css/navbar.css"/><link rel="stylesheet" href="/css/responsive.css"/>
+<link rel="stylesheet" href="/css/servers.css"/><link rel="stylesheet" href="/css/leaderboard.css"/>
+<title>ZypherMC — Minecraft Network · PvP Tiers + SMP + BedWars</title>
+<meta name="description" content="ZypherMC: AAA Minecraft network with PvP duels, ELO tiers, BedWars, Lifesteal, Survival & live server dashboards. Java + Bedrock 1.20.x. play.zypermc.fun"/>
+<meta property="og:title" content="ZypherMC — Minecraft Network"/>
+<meta property="og:description" content="PvP tiers, live servers, leaderboards."/>
+<meta property="og:image" content="/assets/logo-mountain.png"/>
+</head><body>
+<main>
+<section class="container">
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:center">
+    <div>
+      <img src="/assets/logo.png" alt="ZypherMC" style="height:80px;margin-bottom:1rem" class="float"/>
+      <h1 class="glitch" style="font-size:clamp(2.5rem,7vw,5rem);line-height:1">ZypherMC</h1>
+      <p style="color:var(--text-secondary);font-size:1.15rem;max-width:520px;margin-top:.5rem">A AAA Minecraft network — PvP tiers, dedicated SMP, BedWars, Lifesteal and live server dashboards. Java + Bedrock, 1.20.x.</p>
+      <div class="flex" style="margin-top:1.5rem">
+        <button class="btn btn-primary" id="copy-ip">📋 Copy IP · play.zypermc.fun</button>
+        <a href="/leaderboard.html" class="btn btn-ghost">Leaderboard →</a>
+        <a href="https://discord.gg/zypertiers" target="_blank" rel="noopener" class="btn btn-discord">Discord</a>
+      </div>
+    </div>
+    <div style="text-align:center"><img src="/assets/logo.png" alt="" class="glow float" style="max-width:100%;height:auto;max-height:380px"/></div>
+  </div>
+</section>
+<section class="container"><h2 class="section-title">Network Status</h2><div class="grid grid-4" id="net-status"></div></section>
+<section class="container"><h2 class="section-title">Servers</h2><div class="server-grid" id="server-grid"></div></section>
+<section class="container"><h2 class="section-title">⚔️ PvP Top 3</h2><div class="podium" id="home-podium"></div></section>
+<section class="container"><h2 class="section-title">Live PvP Matches</h2><div class="grid grid-2" id="active-matches"></div></section>
+<section class="container"><h2 class="section-title">Recent Matches</h2><div id="recent-matches"></div></section>
+<section class="container"><h2 class="section-title">All-Time</h2><div class="grid grid-4" id="alltime"></div></section>
+</main>
+<footer><div class="container"><strong>ZypherMC</strong> · play.zypermc.fun · <a href="https://discord.gg/zypertiers" target="_blank" rel="noopener">Discord</a> · <a href="/about.html">About</a><div style="margin-top:.5rem;font-size:.8rem">Minecraft Java + Bedrock 1.20.x · © ZypherMC Network</div></div></footer>
+<script src="/js/firebase.js"></script>
+<script src="/js/utils.js"></script>
+<script src="/js/particles.js"></script>
+<script src="/js/three-bg.js"></script>
+<script src="/js/navbar.js"></script>
+<script src="/js/animations.js"></script>
+<script src="/js/servers.js"></script>
+<script src="/js/leaderboard.js"></script>
+<script src="/js/matches.js"></script>
+<script>
+document.getElementById('copy-ip').addEventListener('click', e => {
+  copyIP();
+  const r = e.currentTarget.getBoundingClientRect();
+  purpleBurst(r.left + r.width/2, r.top + r.height/2);
+});
+async function loadHome() {
+  const net = await db('/network/status') || {};
+  document.getElementById('net-status').innerHTML = `
+    <div class="card stat-card"><div class="num">${fmtNum(net.totalPlayers||0)}</div><div class="label">Players online</div></div>
+    <div class="card stat-card"><div class="num">${net.totalOnlineServers||0}/${net.totalServers||0}</div><div class="label">Servers up</div></div>
+    <div class="card stat-card"><div class="num" style="font-size:1.4rem">play.zypermc.fun</div><div class="label"><button class="btn btn-ghost" style="padding:.25rem .5rem;font-size:.7rem" onclick="copyIP()">Copy IP</button></div></div>
+    <div class="card stat-card"><div class="num" style="font-size:1.4rem">${net.networkVersion||'1.20.x'}</div><div class="label">Version</div></div>`;
+  const lb = await db('/pvp/leaderboard/overall');
+  const arr = Array.isArray(lb)?lb.filter(Boolean):objToArr(lb);
+  const pod = document.getElementById('home-podium');
+  if (arr.slice(0,3).length){
+    const order=[arr[1],arr[0],arr[2]];
+    pod.innerHTML = order.map((p,i)=>{ const rank=i===1?1:i===0?2:3; if(!p) return `<div class="podium-item rank-${rank}"><div class="empty">—</div></div>`;
+      return `<div class="podium-item rank-${rank}"><div class="rank-num">#${rank}</div><img src="${avatarUrl(p.playerName)}"/><div class="player-name"><a href="/player.html?name=${encodeURIComponent(p.playerName)}">${p.playerName}</a></div><div class="elo">${fmtNum(p.elo)}</div>${tierBadge(p.elo)}</div>`;
+    }).join('');
+  } else pod.innerHTML = '<div class="empty" style="grid-column:1/-1">No leaderboard data yet</div>';
+  const s = await db('/pvp/server/stats') || {};
+  document.getElementById('alltime').innerHTML = `
+    <div class="card stat-card"><div class="num">${fmtNum(s.totalPlayersAllTime||0)}</div><div class="label">Total players</div></div>
+    <div class="card stat-card"><div class="num">${fmtNum(s.totalMatchesAllTime||0)}</div><div class="label">PvP matches</div></div>
+    <div class="card stat-card"><div class="num">${fmtNum(s.totalKillsAllTime||0)}</div><div class="label">Total kills</div></div>
+    <div class="card stat-card"><div class="num">${fmtNum(s.totalHoursPlayedAllTime||0)}</div><div class="label">Hours played</div></div>`;
+}
+loadHome(); setInterval(loadHome, 30000);
+initServersPage();
+loadMatches(); setInterval(loadMatches, 15000);
+</script></body></html>
