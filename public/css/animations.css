@@ -1,0 +1,21 @@
+/* [ZypherMC] Animations */
+@keyframes rainbow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 20px rgba(155,53,232,.6))}50%{filter:drop-shadow(0 0 40px rgba(200,79,255,.9))}}
+@keyframes glitch{0%,100%{text-shadow:0 0 30px rgba(200,79,255,.7),3px 0 0 #9b35e8,-3px 0 0 #00d4ff}25%{text-shadow:0 0 30px rgba(200,79,255,.7),-3px 0 0 #9b35e8,3px 0 0 #00d4ff}50%{text-shadow:0 0 30px rgba(200,79,255,.7),3px 0 0 #00d4ff,-3px 0 0 #9b35e8}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes shimmer{0%{background-position:-1000px 0}100%{background-position:1000px 0}}
+@keyframes flash-green{0%{background:rgba(0,255,136,.4)}100%{background:transparent}}
+@keyframes flash-red{0%{background:rgba(255,64,96,.4)}100%{background:transparent}}
+.float{animation:float 6s ease-in-out infinite}
+.glow{animation:glow 4s ease-in-out infinite}
+.glitch{animation:glitch 2.5s infinite}
+.fade-up{animation:fadeUp .6s ease-out backwards}
+.slide-in-left{animation:slideInLeft .5s ease-out backwards}
+.flash-green{animation:flash-green 1s ease-out}
+.flash-red{animation:flash-red 1s ease-out}
+.skeleton{background:linear-gradient(90deg,rgba(155,53,232,.05) 0%,rgba(155,53,232,.2) 50%,rgba(155,53,232,.05) 100%);background-size:1000px 100%;animation:shimmer 2s infinite linear;border-radius:8px}
+.skeleton-row{height:48px;margin-bottom:.5rem;background:linear-gradient(90deg,rgba(155,53,232,.05) 0%,rgba(155,53,232,.2) 50%,rgba(155,53,232,.05) 100%);background-size:1000px 100%;animation:shimmer 2s infinite linear;border-radius:8px}
+.tilt{transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.tilt:hover{transform:perspective(800px) rotateY(4deg) rotateX(-3deg) translateZ(10px)}
