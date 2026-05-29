@@ -1,26 +1,15 @@
-// [ZypherMC] PvP leaderboard
+// [ZypherMC] PvP leaderboard — bound to real Firebase /pvp/leaderboard structure.
+// DB only exposes two ranked boards: `elo` and `kills`. Each is an array of
+// { rank, player, tier, elo|kills }. We render exactly what exists, no fake data.
 const LB_TABS = [
-  {key:'overall',label:'Overall ELO'},
-  {key:'classic_duels',label:'Classic'},
-  {key:'skywars',label:'SkyWars'},
-  {key:'bridge',label:'Bridge'},
-  {key:'uhc_duels',label:'UHC'},
-  {key:'combo_duels',label:'Combo'},
-  {key:'op_duels',label:'OP'},
-  {key:'sumo_duels',label:'Sumo'},
-  {key:'no_debuff',label:'No Debuff'},
-  {key:'boxing',label:'Boxing'},
-  {key:'most_wins',label:'Most Wins'},
-  {key:'best_kdr',label:'Best KDR'},
-  {key:'best_streak',label:'Best Streak'},
-  {key:'most_kills',label:'Most Kills'},
-  {key:'arrow_accuracy',label:'Arrow Acc'},
-  {key:'most_matches',label:'Most Matches'},
-  {key:'best_winrate',label:'Win Rate'},
-  {key:'most_damage',label:'Most Damage'},
-  {key:'headshot_kings',label:'Headshots'}
+  {key:'elo',label:'Top ELO',metric:'elo',metricLabel:'ELO'},
+  {key:'kills',label:'Top Kills',metric:'kills',metricLabel:'Kills'}
 ];
-let LB_STATE = { tab:'overall', search:'', tier:'', page:1, perPage:25, data:[] };
+let LB_STATE = { tab:'elo', search:'', tier:'', page:1, perPage:25, data:[] };
+// helper: current tab definition
+const lbTab = () => LB_TABS.find(t=>t.key===LB_STATE.tab) || LB_TABS[0];
+// helper: normalise DB tier strings ("SILVER") to display case ("Silver")
+const tierCase = t => t ? t.charAt(0).toUpperCase()+t.slice(1).toLowerCase() : '—';
 
 function renderTabs() {
   const el = document.getElementById('lb-tabs');
@@ -28,32 +17,29 @@ function renderTabs() {
   el.querySelectorAll('.lb-tab').forEach(b => b.onclick = () => { LB_STATE.tab = b.dataset.key; LB_STATE.page=1; loadLB(); });
 }
 function renderPodium(top3) {
+  const m = lbTab().metric;
   const order = [top3[1], top3[0], top3[2]]; // 2nd, 1st, 3rd visually
   return order.map((p,i) => {
     if (!p) return `<div class="podium-item rank-${i===1?1:i===0?2:3}"><div class="empty">—</div></div>`;
     const rank = i===1?1:i===0?2:3;
     return `<div class="podium-item rank-${rank}">
       <div class="rank-num">#${rank}</div>
-      <img src="${avatarUrl(p.playerName)}" alt=""/>
-      <div class="player-name"><a href="/player.html?name=${encodeURIComponent(p.playerName)}">${p.playerName||'—'}</a></div>
-      <div class="elo">${fmtNum(p.elo)}</div>
-      ${tierBadge(p.elo)}
+      <img src="${avatarUrl(p.player)}" alt=""/>
+      <div class="player-name"><a href="/player.html?name=${encodeURIComponent(p.player)}">${p.player||'—'}</a></div>
+      <div class="elo">${fmtNum(p[m])}</div>
+      <span class="tier-badge">${tierCase(p.tier)}</span>
     </div>`;
   }).join('');
 }
 function renderTable(rows) {
+  const t = lbTab();
   if (!rows.length) return '<div class="empty">No data yet</div>';
-  return `<table><thead><tr><th>#</th><th>Player</th><th>ELO</th><th>Tier</th><th>W</th><th>L</th><th>KDR</th><th class="hide-mobile">Win%</th><th class="hide-mobile">Streak</th></tr></thead>
+  return `<table><thead><tr><th>#</th><th>Player</th><th>${t.metricLabel}</th><th>Tier</th></tr></thead>
   <tbody>${rows.map((p,i)=>`<tr class="slide-in-left" style="animation-delay:${i*0.02}s">
     <td><strong>${p.rank ?? (i+1+(LB_STATE.page-1)*LB_STATE.perPage)}</strong></td>
-    <td><img class="avatar" src="${avatarUrl(p.playerName)}" alt=""/><a href="/player.html?name=${encodeURIComponent(p.playerName)}">${p.playerName||'—'}</a></td>
-    <td><strong>${fmtNum(p.elo)}</strong></td>
-    <td>${tierBadge(p.elo)}</td>
-    <td>${fmtNum(p.wins)}</td>
-    <td>${fmtNum(p.losses)}</td>
-    <td>${p.kdr?.toFixed?.(2) ?? '—'}</td>
-    <td class="hide-mobile">${fmtPercent(p.winRate)}</td>
-    <td class="hide-mobile">${fmtNum(p.killStreak)}</td>
+    <td><img class="avatar" src="${avatarUrl(p.player)}" alt=""/><a href="/player.html?name=${encodeURIComponent(p.player)}">${p.player||'—'}</a></td>
+    <td><strong>${fmtNum(p[t.metric])}</strong></td>
+    <td><span class="tier-badge">${tierCase(p.tier)}</span></td>
   </tr>`).join('')}</tbody></table>`;
 }
 async function loadLB() {
@@ -62,9 +48,12 @@ async function loadLB() {
   renderTabs();
   const raw = await db('/pvp/leaderboard/'+LB_STATE.tab);
   let arr = Array.isArray(raw) ? raw.filter(Boolean) : objToArr(raw);
+  // sort by the active metric descending so ranks always read top-down
+  const m = lbTab().metric;
+  arr.sort((a,b)=>(b[m]||0)-(a[m]||0));
   // filters
-  if (LB_STATE.search) arr = arr.filter(p => (p.playerName||'').toLowerCase().includes(LB_STATE.search.toLowerCase()));
-  if (LB_STATE.tier) arr = arr.filter(p => tierFromElo(p.elo).name === LB_STATE.tier);
+  if (LB_STATE.search) arr = arr.filter(p => (p.player||'').toLowerCase().includes(LB_STATE.search.toLowerCase()));
+  if (LB_STATE.tier) arr = arr.filter(p => tierCase(p.tier) === LB_STATE.tier);
   LB_STATE.data = arr;
   document.getElementById('lb-podium').innerHTML = renderPodium(arr.slice(0,3));
   const start = (LB_STATE.page-1)*LB_STATE.perPage;
